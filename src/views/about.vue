@@ -1,31 +1,27 @@
 <script>
-  import { RouterLink, RouterView } from "vue-router";  
-  export default {
-    data() {
-      return {
-        count: 1,
-       
+  import { useCounterStore } from "@/stores/useCounter";
+  export default{
+    setup(){
+      const counterStore = useCounterStore();
+      return{
+        counterStore
       }
     },
-    methods: {
-      increment(){
-        this.count++;
+    methods:{
+      incrementCounter(){
+        this.counterStore.increment();
+      },
+      reset(){
+        this.counterStore.reset();
       }
-    },
-    computed: {
-      isBig(){
-        return this.count > 10 ? 'Sheesh it is big' : 'Not that big yet';
-      }
-    },
-    
+    }
   }
 </script>
 
 <template>
-  <h1>Hi mom</h1>
-  <p>This is the About.vue file</p>
-  <p>The counter is at {{count}}</p>
-  <button @click="increment">{{ count }}</button>
-  <p>{{isBig}}</p>
+  <h1>Testing the new Store</h1>
+  <p>Store is currently at: {{this.counterStore.counter  }}</p>
+  <button @click="incrementCounter">{{this.counterStore.counter}}</button>
+  <button @click="reset">Reset</button>
 </template>
 

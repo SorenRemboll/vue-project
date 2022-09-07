@@ -1,5 +1,6 @@
 <script>
     import ErrorMessage from "@/components/errorMessage.vue";
+    import Modal from '@/components/modal.vue';
     export default {
       data() {
           return {
@@ -7,11 +8,15 @@
           };
       },
       components:{
-        ErrorMessage
+        ErrorMessage,
+        Modal,
       },
       methods: {
           increment() {
               this.count++;
+          },
+          setNewCounterValue(newCounterValue){
+            this.count = newCounterValue;
           }
       },
       computed: {
@@ -32,4 +37,5 @@
     <button @click="increment">{{ count }}</button>
     <ErrorMessage :message="isBig" />
   </main>
+  <Modal v-if="count>10" @set-new="setNewCounterValue" />
 </template>
