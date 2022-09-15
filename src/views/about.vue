@@ -1,5 +1,6 @@
 <script>
-  import { useCounterStore } from "@/stores/useCounter";
+  import { useCounterStore } from "!/useCounter";
+  import { getWord } from "$/getWord.js";
   export default{
     setup(){
       const counterStore = useCounterStore();
@@ -13,6 +14,9 @@
       },
       reset(){
         this.counterStore.reset();
+      },
+      getWordleWord(){
+        return getWord();
       }
     }
   }
@@ -21,6 +25,7 @@
 <template>
   <h1>Testing the new Store</h1>
   <p>Store is currently at: {{this.counterStore.counter  }}</p>
+  <p>You got the word: {{ getWordleWord() }}</p>
   <button @click="incrementCounter">{{this.counterStore.counter}}</button>
   <button @click="reset">Reset</button>
 </template>
