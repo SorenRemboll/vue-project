@@ -46,12 +46,11 @@
                         })
                         return
                     }
-                    console.log(this.gameStore.attempt);
                     if(this.gameStore.validate()){
-                        this.$refs.gameRows[this.gameStore.attempt].paintRow()
                         return
                     }
                     this.gameStore.addToAttempts();
+                    this.$refs.gameRows[this.gameStore.attempt].paintRow()
                 }
                 
             }
@@ -76,6 +75,7 @@
                 gap: 1px;
                 margin-top: 1px;
                 .gameBox{
+                    transition: 0.5s;
                     width: 100%;
                     aspect-ratio: 1/1;
                     display: flex;

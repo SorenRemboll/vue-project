@@ -14,8 +14,6 @@ export const wordleStore = defineStore("gameStore", {
   actions: {
     addToAttempts(){
       this.attempts.push(this.letters);
-      this.resetLetters();
-      this.attempt++;
     },
     resetLetters(){
       this.letters = [];

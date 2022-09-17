@@ -17,8 +17,10 @@ export default {
         return {gameStore:wordleStore()}
     },
     mounted(){
-        this.gameStore.$subscribe((mutation)=>{
-            this.insertLetter(mutation)
+        this.gameStore.$subscribe((mutation,state)=>{
+            if(this.isActive){
+                this.insertLetter(mutation,state)
+            }
         });
     },
     data(){
@@ -28,17 +30,38 @@ export default {
     },
     methods: {
         paintRow(){
-            if (!this.isActive) {
+            if(!this.isActive){
                 return
             }
-            console.log('You won on attempt: ' + (this.attempt + 1) + '!')
+            for (let i = 0; i < this.gameStore.attempts[this.attempt].length; i++) {
+                setTimeout(() => {
+                    const letterObj = this.gameStore.attempts[this.attempt][i];
+                    const boxNode = this.$refs.gameBox[i];
+                    boxNode.children[0].textContent = letterObj.letter;
+                    if(letterObj.state == "IN WORD"){
+                        boxNode.classList.add('inWord')
+                    }
+                    if(letterObj.state == "MATCH"){
+                        boxNode.classList.remove('inWord');
+                        boxNode.classList.add('matched');
+                    }
+                    if(letterObj.state == null){
+                        boxNode.classList.add('negative')
+                    }
+                    if(i == 4){
+                        setTimeout(()=>{
+                            this.gameStore.resetLetters();
+                            this.gameStore.attempt++;
+                    },500)
+                    }
+                }, 500*i);
+            }
+            
         },
         insertLetter(mutation){
-            
             if (!this.isActive) {
                 return
             }
-            
             if(mutation.events.type == 'add'){
                 for (let i = 0; i < this.$refs.gameBox.length; i++) {
                     const box = this.$refs.gameBox[i];
@@ -50,6 +73,9 @@ export default {
                 }
             }
             if(mutation.events.type == 'set'){
+                if(mutation.events.key != 'letters'){
+                    return
+                }
                 for (let i = 0; i < this.$refs.gameBox.length; i++) {
                     const box = this.$refs.gameBox[i];
                     const letter = this.gameStore.letters[i];
@@ -71,5 +97,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+    .gameBox{
+        opacity: 1;
+    }
+    .gameBox.matched{
+        background-color: rgb(38, 191, 38) !important;
+        color: black !important;
+    }
+    .gameBox.inWord{
+        background-color: #FFFF33 !important;
+        color: black !important;
+    }
+    .gameBox.negative{
+        opacity: 0.8;
+    }
+    @keyframes match {
+        
+    }
 </style>
