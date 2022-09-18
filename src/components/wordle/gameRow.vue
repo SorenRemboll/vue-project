@@ -8,6 +8,7 @@
 
 <script>
 import { wordleStore } from '!/wordleStore';
+import Swal from 'sweetalert2';
 export default {
     props:[
         'rowID',
@@ -29,7 +30,7 @@ export default {
         }
     },
     methods: {
-        paintRow(){
+        paintRow(condition = false){
             if(!this.isActive){
                 return
             }
@@ -49,10 +50,21 @@ export default {
                         boxNode.classList.add('negative')
                     }
                     if(i == 4){
+                        
                         setTimeout(()=>{
+                            this.$emit('rowDone')
+
+                            if(condition){
+                               this.$emit('painted',true);
+                                return
+                            }
+                            if(!condition && this.gameStore.attempt +1 == this.gameStore.amountOfAttempts){
+                                this.$emit('painted',false);
+                                return
+                            }
                             this.gameStore.resetLetters();
                             this.gameStore.attempt++;
-                    },500)
+                        },500)
                     }
                 }, 500*i);
             }
@@ -85,7 +97,14 @@ export default {
                 }
             }
             
+        },
+        clean(){
+            this.$refs.gameBox.forEach(box => {
+                box.classList = 'gameBox';
+                box.children[0].textContent = '';
+            })
         }
+
     },
     computed:{
         isActive(){

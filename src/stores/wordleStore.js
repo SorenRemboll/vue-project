@@ -1,12 +1,13 @@
 import { defineStore } from "pinia";
-
+import words from '$/getWord.js';
 export const wordleStore = defineStore("gameStore", {
   state: () => ({
-    currentWord: 'react',
+    currentWord: words.getWord(),
     attempts:[],
     letters:[],
-    amountOfAttempts: 5,
+    amountOfAttempts: 6,
     attempt:0,
+    freeLetters:0
   }),
   getters: {
     
@@ -17,6 +18,9 @@ export const wordleStore = defineStore("gameStore", {
     },
     resetLetters(){
       this.letters = [];
+    },
+    restartGame(){
+      this.$reset()
     },
     validate(){
       const currentWordArr = this.currentWord.split('').map(e => e.toUpperCase());

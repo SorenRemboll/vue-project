@@ -1,6 +1,5 @@
 <script>
   import { useCounterStore } from "!/useCounter";
-  import { getWord } from "$/getWord.js";
   export default{
     setup(){
       const counterStore = useCounterStore();
