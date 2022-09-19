@@ -1,6 +1,10 @@
 <template>
   <div id="game">
-    <GamePrompt />
+    <Transition>
+      <GamePrompt v-if="showGame == false" @start="startGame" />
+    </Transition>  
+    
+    <Transition>
     <div v-if="showGame" class="gameContainer">
       <div class="gameBoxes">
         <GameRow
@@ -15,6 +19,7 @@
       </div>
       <Keyboard @letter="handleEmit" />
     </div>
+    </Transition>
   </div>
 </template>
 <script>
@@ -99,9 +104,11 @@ export default {
     },
     cleanBoard(){
         this.$refs.gameRows.forEach(row => row.clean());
+    },
+    startGame(){
+      this.showGame = true;
     }
   },
-  computed: {},
 };
 </script>
 <style lang="scss">
@@ -148,5 +155,14 @@ export default {
         width:80vw;
     }
   }
+}
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 </style>

@@ -7,6 +7,7 @@ export const wordleStore = defineStore("gameStore", {
     letters:[],
     amountOfAttempts: 6,
     attempt:0,
+    difficulty:null,
     freeLetters:0
   }),
   getters: {
