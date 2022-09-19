@@ -58,13 +58,15 @@
 
 <style lang="scss" scoped>
     #gamePrompt{
-        width: 80vw;
+        width: 450px;
         background-color: rgb(255, 255, 255);
         padding: 15px;
         border-radius: 15px;
         text-align: center;
         position: absolute;
-        left: 10vw;
+        left: calc(50% - calc(450px/2));
+        box-shadow: 15px 15px 5px 0px rgba(0,0,0,0.75);
+
         .easy:hover{
             background-color: rgb(135, 255, 135);
         }
@@ -80,7 +82,7 @@
             border: solid 1px black;
             padding: 10px;
             border-radius: 15px 35px;
-            width: 50%;
+            width: 80%;
             transition: 0.3s;
             margin:15px auto;
             cursor: pointer;
