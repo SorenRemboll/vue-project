@@ -44,6 +44,9 @@ export default {
       showGame:false,
     };
   },
+  mounted(){
+    console.log(this.gameStore.currentWord);
+  },
   methods: {
     painted(didYouWin) {
       if (didYouWin) {
@@ -114,7 +117,7 @@ export default {
 <style lang="scss">
 #game {
   .gameBoxes {
-    width: 50vw;
+    width: 40vw;
     background-color: rgb(57, 126, 151);
     border-radius: 15px;
     margin: 10px auto;

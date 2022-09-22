@@ -38,12 +38,43 @@
 </template>
 
 <script>
+  import {wordleStore} from '!/wordleStore';
     export default {
+      setup(){
+        return {gameStore:wordleStore()}
+      },
       methods:{
         clickEvent(letter){
           this.$emit('letter',letter);
+        },
+        colorKey(state){
+          let keyboardKeys = document.querySelectorAll('.key');
+          keyboardKeys = [...keyboardKeys].filter(key => {
+            if(!key.classList.contains('large')){
+              return key
+            }
+          });
+          for (let i = 0; i < this.gameStore.getAllLetters.length; i++) {
+            const element = this.gameStore.getAllLetters[i];
+            let node = keyboardKeys.find(e => e.textContent === element.letter);
+            if (!element.state) {
+              setTimeout(()=>{node.classList.add('wrong')},2500);
+            }
+            if(element.state == 'IN WORD'){
+              setTimeout(()=>{node.classList.add('inWord')},2500);
+            }
+            if(element.state == "MATCH"){
+              setTimeout(()=>{node.classList.add('match')},2500);
+            }
+          }
         }
-      }
+      },
+      mounted(){
+        this.gameStore.$subscribe((mutation,state)=>{
+          this.colorKey(state);
+        })
+      },
+      
     }
 </script>
 
@@ -85,24 +116,20 @@
         width: 1.75em;
         height: 1.75em;
       }
-      
+      .key.wrong{
+        opacity: 0.5;
+        pointer-events: none;
+      }
+      .key.inWord{
+        background-color: #FFFF33 ;
+        color: black ;
+      }
+      .key.match{
+        background-color: rgb(38, 191, 38) ;
+        color: black ;
+      }
       .key:hover {
         --lightness-offset: 10%;
       }
       
-      .key.wrong {
-        --lightness: 23%;
-      }
-      
-      .key.wrong-location {
-        --hue: 49;
-        --saturation: 51%;
-        --lightness: 47%;
-      }
-      
-      .key.correct {
-        --hue: 115;
-        --saturation: 29%;
-        --lightness: 43%;
-      }
 </style>

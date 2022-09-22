@@ -8,10 +8,11 @@ export const wordleStore = defineStore("gameStore", {
     amountOfAttempts: 6,
     attempt:0,
     difficulty:null,
-    freeLetters:0
   }),
-  getters: {
-    
+  getters:{
+    getAllLetters(){
+      return this.attempts.flat();
+    }
   },
   actions: {
     addToAttempts(){

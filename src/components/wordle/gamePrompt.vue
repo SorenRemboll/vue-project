@@ -42,6 +42,7 @@
             startGame(difficulty){
                 if(difficulty === 'easy'){
                     this.gameStore.amountOfAttempts = 7;
+                    this.gameStore.freeLetters = 1;
                 }
                 if(difficulty === 'medium'){
                     this.gameStore.amountOfAttempts = 6

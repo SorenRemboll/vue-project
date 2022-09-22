@@ -1,8 +1,15 @@
 <template>
-    <div :class="{active: isActive}" class="gameRow">
-        <div ref="gameBox" class="gameBox" v-for="box in 5" :key="box">
-            <p></p>
+    <div class="rowWrapper">
+        <div :class="{active: isActive}" class="gameRow">
+            <div ref="gameBox" class="gameBox" v-for="box in 5" :key="box">
+                <p></p>
+            </div>
         </div>
+        <transition>
+            <div v-if="showMagic" @click="useMagic" class="magicIcon">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
+        </transition>
     </div>
 </template>
 
@@ -103,19 +110,43 @@ export default {
                 box.classList = 'gameBox';
                 box.children[0].textContent = '';
             })
+        },
+        useMagic(){
+            console.log('MAGIC');
         }
-
     },
     computed:{
         isActive(){
             return this.rowID == this.attempt;
         },
+        showMagic(){
+            return this.isActive && this.attempt >= 3 && this.gameStore.getAllLetters.filter(e => e.state == 'MATCH').length == 0
+        }
     },
-   
 }
 </script>
 
 <style lang="scss" scoped>
+    .rowWrapper{
+        position: relative;
+        z-index: 1;
+        .magicIcon{
+            background-color: white;
+            color: rgb(38, 191, 38);
+            position: absolute;
+            top: calc(50% - 20px);
+            height: 40px;
+            width: 40px;
+            display: grid;
+            place-items: center;
+            font-size: 1.5em;
+            border-radius: 100%;
+            left: calc(100% + 20px);
+            z-index: 4;
+            cursor: pointer;
+            border: solid 2px rgb(193, 8, 186);
+        }
+    }
     .gameBox{
         opacity: 1;
     }
