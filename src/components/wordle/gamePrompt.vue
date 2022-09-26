@@ -1,7 +1,7 @@
 <template>
     <div id="gamePrompt">
         <h1>Welcome to Vue-dle!</h1>
-        <p>Thanks for playing my little game, please chose a difficulty!</p>
+        <p>Thanks for playing my little game, please choose a difficulty!</p>
         <div @click="startGame('easy')" class="difficultyBox easy">
             <h2>Easy!<i class="fa-solid fa-bolt"></i></h2>
             <p>You prefer an easy time with less preassure..</p>
@@ -137,6 +137,19 @@
                     }
                 }
             }
+        }
+    }
+    @media screen and (max-width:600px) {
+        #gamePrompt{
+            h1{
+                font-size: 26px;
+            }
+            position: absolute;
+            margin: auto;
+            width: calc(100% - 25px*2);
+            left: 10px;
+            height: 70vh;
+            overflow: scroll;
         }
     }
 </style>

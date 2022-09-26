@@ -1,13 +1,15 @@
 import { defineStore } from "pinia";
 import words from '$/getWord.js';
-export const wordleStore = defineStore("gameStore", {
+export const wordleStore = defineStore(
+  "gameStore", {
   state: () => ({
     currentWord: words.getWord(),
     attempts:[],
     letters:[],
-    amountOfAttempts: 6,
+    amountOfAttempts: 0,
     attempt:0,
     difficulty:null,
+    allowMagic: true,
   }),
   getters:{
     getAllLetters(){
@@ -21,8 +23,22 @@ export const wordleStore = defineStore("gameStore", {
     resetLetters(){
       this.letters = [];
     },
-    restartGame(){
-      this.$reset()
+    reset(noSettings){
+      let settings = this.difficulty;
+      this.$reset();
+      if(!noSettings){
+        return
+      }
+      this.difficulty = settings;
+      if(settings === 'easy'){
+        this.amountOfAttempts = 7;
+      }
+      if(settings === 'medium'){
+          this.amountOfAttempts = 6
+      }
+      if(settings === 'hard'){
+        this.amountOfAttempts = 5;
+      }
     },
     validate(){
       const currentWordArr = this.currentWord.split('').map(e => e.toUpperCase());
@@ -37,6 +53,9 @@ export const wordleStore = defineStore("gameStore", {
         }
       }
       return this.letters.every(letter => letter.state == 'MATCH');
+    },
+    handleMenues(menuIcon){
+
     }
   },
 });

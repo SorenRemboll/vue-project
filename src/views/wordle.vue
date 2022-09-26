@@ -17,7 +17,7 @@
           :key="index"
         />
       </div>
-      <Keyboard @letter="handleEmit" />
+      <Keyboard ref="keyboard" @letter="handleEmit" />
     </div>
     </Transition>
   </div>
@@ -39,12 +39,19 @@ export default {
   },
   data() {
     return {
-      isReadyToTest: false,
       waiting: false,
       showGame:false,
     };
   },
   mounted(){
+    document.addEventListener('keydown',(e) => {
+      if(e.key == 'Escape'){
+        this.$refs.keyboard.reset();
+        this.$refs.gameRows.forEach(row => row.clean());
+        this.gameStore.reset(false);
+        this.showGame = false;
+      }
+    } )
     console.log(this.gameStore.currentWord);
   },
   methods: {
@@ -54,10 +61,17 @@ export default {
           title: `You won in ${this.gameStore.attempt + 1} attempts!`,
           text: "Well played :)",
           icon: "success",
-          confirmButtonText:'Restart',
-        }).then(() => {
-          this.cleanBoard();
-          this.gameStore.restartGame();
+          confirmButtonText:'Restart with same settings',
+          showCancelButton:true,
+          cancelButtonText:'Back to menu'
+        }).then((answer) => {
+          this.waiting = false;
+          this.$refs.keyboard.reset();
+          this.$refs.gameRows.forEach(row => row.clean());
+          this.gameStore.reset(answer.isConfirmed);
+          if(!answer.isConfirmed){
+            this.showGame = !this.showGame;
+          }
         });
       }
       if (!didYouWin) {
@@ -65,12 +79,20 @@ export default {
           title: `You lost.. The word was ${this.gameStore.currentWord.toUpperCase()}.`,
           text: "Better luck next time!",
           icon: "error",
-          confirmButtonText:'Restart',
-        }).then(() => {
-          this.cleanBoard();
-          this.gameStore.restartGame();
+          confirmButtonText:'Restart with same settings',
+          showCancelButton:true,
+          cancelButtonText:'Back to menu'
+        }).then((answer) => {
+          this.waiting = false;
+          this.$refs.keyboard.reset();
+          this.$refs.gameRows.forEach(row => row.clean());
+          this.gameStore.reset(answer.isConfirmed);
+          if(!answer.isConfirmed){
+            this.showGame = !this.showGame;
+          }
         });
       }
+      
     },
     rowDone(){
         this.waiting = false;
@@ -105,9 +127,6 @@ export default {
         }
       }
     },
-    cleanBoard(){
-        this.$refs.gameRows.forEach(row => row.clean());
-    },
     startGame(){
       this.showGame = true;
     }
@@ -116,6 +135,7 @@ export default {
 </script>
 <style lang="scss">
 #game {
+  overflow: hidden;
   .gameBoxes {
     width: 40vw;
     background-color: rgb(57, 126, 151);

@@ -47,6 +47,17 @@
         clickEvent(letter){
           this.$emit('letter',letter);
         },
+        reset(){
+          let keyboardKeys = document.querySelectorAll('.key');
+          keyboardKeys = [...keyboardKeys].filter(key => {
+            if(!key.classList.contains('large')){
+              return key
+            }
+          });
+          keyboardKeys.forEach(key => {
+            key.classList = 'key';
+          });
+        },
         colorKey(state){
           let keyboardKeys = document.querySelectorAll('.key');
           keyboardKeys = [...keyboardKeys].filter(key => {

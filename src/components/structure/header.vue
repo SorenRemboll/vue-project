@@ -1,28 +1,49 @@
 <template>
     <div id="header">
-        <i class="fa-solid fa-ghost"></i>
+        <div class="iconList">
+            <i v-if="this.gameStore.difficulty" class="fa-solid fa-door-open"></i>
+            <i class="fa-solid fa-ghost"></i>
+            <i v-if="this.gameStore.difficulty" class="fa-solid fa-arrow-rotate-left"></i>
+        </div>
         <div class="links">
-            <router-link to="/">Home</router-link>
-            <router-link to="/about">About</router-link>
-            <router-link to="/game">Wordle!</router-link>
+            <router-link to="/">Wordle!</router-link>
+            
         </div>
     </div>
 </template>
 
 <script>
+    import { wordleStore } from '!/wordleStore';
     export default {
-        
+       setup(){
+        return{gameStore:wordleStore()}
+       },
     }
 </script>
 
 <style lang="scss" scoped>
+    
     #header{
+        .iconList{
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            justify-content: center;
+            gap: 30px;
+            align-items: flex-end;
+            .fa-door-open{
+                font-size: 2.5em;
+            }
+            .fa-arrow-rotate-left{
+                font-size: 2.5em;
+            }
+        }
         display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
         gap: 10px;
-        padding: 40px 0;
+        padding: 30px 0;
         i{
             color: teal;
             font-size: 5em;

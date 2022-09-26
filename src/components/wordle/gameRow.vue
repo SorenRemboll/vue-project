@@ -1,10 +1,12 @@
 <template>
     <div class="rowWrapper">
-        <div :class="{active: isActive}" class="gameRow">
+       <div class="animationWrapper">
+        <div ref="gameRow" :class="{active: isActive}" class="gameRow">
             <div ref="gameBox" class="gameBox" v-for="box in 5" :key="box">
                 <p></p>
             </div>
         </div>
+       </div>
         <transition>
             <div v-if="showMagic" @click="useMagic" class="magicIcon">
                 <i class="fa-solid fa-wand-magic-sparkles"></i>
@@ -112,7 +114,14 @@ export default {
             })
         },
         useMagic(){
-            console.log('MAGIC');
+            if(!this.gameStore.allowMagic){
+                return
+            }
+            this.gameStore.allowMagic = false;
+            let freeLetter = this.gameStore.currentWord.split('')[this.gameStore.letters.length].toUpperCase()
+            this.$refs.gameRow.classList.add('magic');
+            this.gameStore.letters.push({letter:freeLetter,state:'MATCH'});
+            this.$refs.gameBox[0].children[0].textContent = freeLetter
         }
     },
     computed:{
@@ -120,13 +129,30 @@ export default {
             return this.rowID == this.attempt;
         },
         showMagic(){
-            return this.isActive && this.attempt >= 3 && this.gameStore.getAllLetters.filter(e => e.state == 'MATCH').length == 0
+            return this.isActive && this.gameStore.difficulty == 'easy' && this.gameStore.allowMagic && this.attempt >= 3 && this.gameStore.getAllLetters.filter(e => e.state == 'MATCH').length == 0
         }
     },
 }
 </script>
 
 <style lang="scss" scoped>
+    
+    .animationWrapper{
+        overflow: hidden;
+        position: relative;
+    }
+    .magic::before{
+        animation-name: magicShimmer;
+        animation-duration: 1.5s;
+        animation-iteration-count: 1;
+        position: absolute;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        content: '';
+        background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 70%);
+        
+    }
     .rowWrapper{
         position: relative;
         z-index: 1;
@@ -147,6 +173,9 @@ export default {
             border: solid 2px rgb(193, 8, 186);
         }
     }
+    .gameRow{
+        overflow: hidden;
+    }
     .gameBox{
         opacity: 1;
     }
@@ -161,7 +190,12 @@ export default {
     .gameBox.negative{
         opacity: 0.8;
     }
-    @keyframes match {
-        
+    @keyframes magicShimmer{
+        0%{
+            left: -100%;
+        }
+        100%{
+            left: 100%;
+        }
     }
 </style>
