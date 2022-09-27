@@ -1,13 +1,9 @@
 <template>
     <div id="header">
         <div class="iconList">
-            <i v-if="this.gameStore.difficulty" class="fa-solid fa-door-open"></i>
+            <i v-if="this.gameStore.difficulty" @click="this.gameStore.handleMenues('back')" class="fa-solid fa-door-open"></i>
             <i class="fa-solid fa-ghost"></i>
-            <i v-if="this.gameStore.difficulty" class="fa-solid fa-arrow-rotate-left"></i>
-        </div>
-        <div class="links">
-            <router-link to="/">Wordle!</router-link>
-            
+            <i v-if="this.gameStore.difficulty"  @click="this.gameStore.handleMenues('reset')" class="fa-solid fa-arrow-rotate-left"></i>
         </div>
     </div>
 </template>
@@ -30,13 +26,17 @@
             width: 100%;
             justify-content: center;
             gap: 30px;
+            
             align-items: flex-end;
-            .fa-door-open{
+            .fa-door-open,.fa-arrow-rotate-left{
                 font-size: 2.5em;
+                cursor: pointer;
+                transition: 0.3s;
+                &:hover{
+                    color: white;
+                }
             }
-            .fa-arrow-rotate-left{
-                font-size: 2.5em;
-            }
+            
         }
         display: flex;
         align-items: center;

@@ -40,11 +40,19 @@ export default {
     },
     methods: {
         paintRow(condition = false){
+            this.gameStore.blockAction = true;
             if(!this.isActive){
                 return
             }
             for (let i = 0; i < this.gameStore.attempts[this.attempt].length; i++) {
                 setTimeout(() => {
+                    this.paintAndEmit(condition,i)
+                }, 500*i);
+            }
+            
+        },
+        paintAndEmit(condition,i){
+            
                     const letterObj = this.gameStore.attempts[this.attempt][i];
                     const boxNode = this.$refs.gameBox[i];
                     boxNode.children[0].textContent = letterObj.letter;
@@ -75,9 +83,6 @@ export default {
                             this.gameStore.attempt++;
                         },500)
                     }
-                }, 500*i);
-            }
-            
         },
         insertLetter(mutation){
             if (!this.isActive) {
@@ -196,6 +201,14 @@ export default {
         }
         100%{
             left: 100%;
+        }
+    }
+    @media screen and (max-width: 600px){
+        .rowWrapper{
+            .magicIcon{
+                top: -20px;
+                left: calc(100% - 20px);
+            }
         }
     }
 </style>

@@ -10,6 +10,8 @@ export const wordleStore = defineStore(
     attempt:0,
     difficulty:null,
     allowMagic: true,
+    menuClicked: null,
+    blockAction:false,
   }),
   getters:{
     getAllLetters(){
@@ -34,10 +36,12 @@ export const wordleStore = defineStore(
         this.amountOfAttempts = 7;
       }
       if(settings === 'medium'){
-          this.amountOfAttempts = 6
+          this.amountOfAttempts = 6;
+          this.allowMagic = false;
       }
       if(settings === 'hard'){
         this.amountOfAttempts = 5;
+        this.allowMagic = false;
       }
     },
     validate(){
@@ -55,7 +59,11 @@ export const wordleStore = defineStore(
       return this.letters.every(letter => letter.state == 'MATCH');
     },
     handleMenues(menuIcon){
-
+      if(this.blockAction){
+        return
+      }
+      this.blockAction = true;
+      this.menuClicked = menuIcon;
     }
   },
 });

@@ -148,7 +148,7 @@
             margin: auto;
             width: calc(100% - 25px*2);
             left: 10px;
-            height: 70vh;
+            height: 650px;
             overflow: scroll;
         }
     }

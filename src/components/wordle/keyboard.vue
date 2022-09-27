@@ -58,7 +58,7 @@
             key.classList = 'key';
           });
         },
-        colorKey(state){
+        colorKey(){
           let keyboardKeys = document.querySelectorAll('.key');
           keyboardKeys = [...keyboardKeys].filter(key => {
             if(!key.classList.contains('large')){
@@ -68,21 +68,23 @@
           for (let i = 0; i < this.gameStore.getAllLetters.length; i++) {
             const element = this.gameStore.getAllLetters[i];
             let node = keyboardKeys.find(e => e.textContent === element.letter);
-            if (!element.state) {
-              setTimeout(()=>{node.classList.add('wrong')},2500);
+            if (!element.state && !this.gameStore.blockAction) {
+              node.classList.add('wrong')
             }
-            if(element.state == 'IN WORD'){
-              setTimeout(()=>{node.classList.add('inWord')},2500);
+            if(element.state == 'IN WORD' && !this.gameStore.blockAction){
+              node.classList.add('inWord')
             }
-            if(element.state == "MATCH"){
-              setTimeout(()=>{node.classList.add('match')},2500);
+            if(element.state == "MATCH" && !this.gameStore.blockAction){
+              node.classList.add('match')
             }
           }
-        }
+        },
       },
       mounted(){
         this.gameStore.$subscribe((mutation,state)=>{
-          this.colorKey(state);
+          if(mutation.events.key == 'attempt'){
+            this.colorKey();
+          }
         })
       },
       

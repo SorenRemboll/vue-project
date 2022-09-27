@@ -39,20 +39,25 @@ export default {
   },
   data() {
     return {
-      waiting: false,
       showGame:false,
     };
   },
   mounted(){
+    this.gameStore.$subscribe((mutation) => {
+      if(mutation.events.key == 'menuClicked'){
+        if(mutation.events.newValue == 'reset'){
+          this.resetGame(true)
+        }
+        if(mutation.events.newValue == 'back'){
+          this.resetGame(false)
+        }
+      }
+    });
     document.addEventListener('keydown',(e) => {
       if(e.key == 'Escape'){
-        this.$refs.keyboard.reset();
-        this.$refs.gameRows.forEach(row => row.clean());
-        this.gameStore.reset(false);
-        this.showGame = false;
+        this.resetGame(false);
       }
     } )
-    console.log(this.gameStore.currentWord);
   },
   methods: {
     painted(didYouWin) {
@@ -65,13 +70,7 @@ export default {
           showCancelButton:true,
           cancelButtonText:'Back to menu'
         }).then((answer) => {
-          this.waiting = false;
-          this.$refs.keyboard.reset();
-          this.$refs.gameRows.forEach(row => row.clean());
-          this.gameStore.reset(answer.isConfirmed);
-          if(!answer.isConfirmed){
-            this.showGame = !this.showGame;
-          }
+          this.resetGame(answer.isConfirmed)
         });
       }
       if (!didYouWin) {
@@ -83,24 +82,26 @@ export default {
           showCancelButton:true,
           cancelButtonText:'Back to menu'
         }).then((answer) => {
-          this.waiting = false;
-          this.$refs.keyboard.reset();
-          this.$refs.gameRows.forEach(row => row.clean());
-          this.gameStore.reset(answer.isConfirmed);
-          if(!answer.isConfirmed){
-            this.showGame = !this.showGame;
-          }
+          this.resetGame(answer.isConfirmed)
         });
       }
       
     },
+    resetGame(bool){
+
+      this.gameStore.blockAction = false;
+      this.$refs.keyboard.reset();
+      this.$refs.gameRows.forEach(row => row.clean());
+      this.gameStore.reset(bool);
+      if(!bool){
+        this.showGame = !this.showGame;
+      }
+      this.gameStore.blockAction = false;
+    },
     rowDone(){
-        this.waiting = false;
+        this.gameStore.blockAction = false;
     },
     handleEmit(payload) {
-        if(this.waiting){
-            return
-        }
       if (this.gameStore.letters.length != 5 && !["delete", "enter"].includes(payload)) {
         this.gameStore.letters.push({ letter: payload, state: null });
         return;
@@ -117,7 +118,6 @@ export default {
           });
           return;
         }
-        this.waiting = true;
         if (this.gameStore.validate()) {
           this.gameStore.addToAttempts();
           this.$refs.gameRows[this.gameStore.attempt].paintRow(true);
