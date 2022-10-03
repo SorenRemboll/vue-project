@@ -45,6 +45,7 @@
       },
       methods:{
         clickEvent(letter){
+          console.log(letter);
           this.$emit('letter',letter);
         },
         reset(){
@@ -55,6 +56,7 @@
             }
           });
           keyboardKeys.forEach(key => {
+            console.log(key);
             key.classList = 'key';
           });
         },

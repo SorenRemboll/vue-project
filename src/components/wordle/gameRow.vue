@@ -29,6 +29,7 @@ export default {
     mounted(){
         this.gameStore.$subscribe((mutation,state)=>{
             if(this.isActive){
+                console.log('test');
                 this.insertLetter(mutation,state)
             }
         });
@@ -44,6 +45,7 @@ export default {
             if(!this.isActive){
                 return
             }
+            console.log(this.gameStore.state);
             for (let i = 0; i < this.gameStore.attempts[this.attempt].length; i++) {
                 setTimeout(() => {
                     this.paintAndEmit(condition,i)
@@ -85,6 +87,7 @@ export default {
                     }
         },
         insertLetter(mutation){
+            console.log(mutation);
             if (!this.isActive) {
                 return
             }
@@ -99,6 +102,7 @@ export default {
                 }
             }
             if(mutation.events.type == 'set'){
+                
                 if(mutation.events.key != 'letters'){
                     return
                 }

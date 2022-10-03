@@ -1,5 +1,8 @@
 <template>
   <div id="game">
+    <div v-if="this.gameStore.difficulty == 'hard'" :class="timeColor" class="hardTimer">
+      <p>{{timerVar}} <i class="fa-solid fa-stopwatch"></i></p>
+    </div>
     <Transition>
       <GamePrompt v-if="showGame == false" @start="startGame" />
     </Transition>  
@@ -40,6 +43,7 @@ export default {
   data() {
     return {
       showGame:false,
+      timerVar: 30,
     };
   },
   mounted(){
@@ -57,9 +61,26 @@ export default {
       if(e.key == 'Escape'){
         this.resetGame(false);
       }
-    } )
+    });
   },
   methods: {
+    timer(){
+      if(this.timerVar == 0){
+        Swal.fire({
+          title: `You ran out of time.. The word was ${this.gameStore.currentWord.toUpperCase()}.`,
+          text: "Better luck next time!",
+          icon: "error",
+          confirmButtonText:'Restart with same settings',
+          showCancelButton:true,
+          cancelButtonText:'Back to menu'
+        }).then((answer) => {
+          this.resetGame(answer.isConfirmed)
+        });
+        return
+      }
+      this.timerVar--;
+      setTimeout(this.timer,1000)
+    },
     painted(didYouWin) {
       if (didYouWin) {
         Swal.fire({
@@ -129,11 +150,45 @@ export default {
     },
     startGame(){
       this.showGame = true;
+      if(this.gameStore.difficulty == 'hard'){
+        this.timer()
+      }
     }
   },
+  computed:{
+    timeColor(){
+      let colorClass = 'neutral';
+      if(this.timerVar < 20){
+        colorClass = 'yellow'
+      }
+      if(this.timerVar < 10){
+        colorClass = 'red';
+      }
+      if(this.timerVar < 5){
+        colorClass = 'critical';
+      }
+      return colorClass
+    }
+  }
 };
 </script>
 <style lang="scss">
+  .hardTimer{
+    text-align: center;
+    color:white;
+    p{
+      font-size: 30px;
+    }
+    &.yellow{
+      color: rgb(255, 230, 0);
+    }
+    &.red{
+      color: rgb(255, 187, 0);
+    }
+    &.critical{
+      color: red;
+    }
+  }
 #game {
   overflow: hidden;
   .gameBoxes {
