@@ -9,7 +9,7 @@ h1,h2,h3{
     margin: 0;
     padding: 0;
 }
-#app{
+body{
     background-color: rgb(45, 61, 67);
     min-height: 100vh;
 }

@@ -14,6 +14,7 @@
           ref="gameRows"
           @painted="painted"
           @rowDone="rowDone"
+          @pauseTimer="pauseVar = true"
           :rowID="index"
           :attempt="this.gameStore.attempt"
           v-for="(gameRow, index) in this.gameStore.amountOfAttempts"
@@ -44,18 +45,20 @@ export default {
     return {
       showGame:false,
       timerVar: 30,
+      pauseVar: false,
     };
   },
   mounted(){
     this.gameStore.$subscribe((mutation) => {
-      if(mutation.events.key == 'menuClicked'){
-        if(mutation.events.newValue == 'reset'){
-          this.resetGame(true)
-        }
-        if(mutation.events.newValue == 'back'){
-          this.resetGame(false)
-        }
+      if(mutation.payload?.menuClicked == 'reset'){
+        this.resetGame(true);
       }
+      if(mutation.payload?.menuClicked == 'back'){
+        this.resetGame(false);
+      }
+     /*  if(mutation.events.key == 'attempt'){
+        console.log('increase timer');
+      } */
     });
     document.addEventListener('keydown',(e) => {
       if(e.key == 'Escape'){
@@ -64,6 +67,9 @@ export default {
     });
   },
   methods: {
+    pauseTimer(){
+
+    },
     timer(){
       if(this.timerVar == 0){
         Swal.fire({
@@ -78,7 +84,13 @@ export default {
         });
         return
       }
+      
       this.timerVar--;
+      if(!this.showGame){
+        this.timerVar = 30;
+        return
+      }
+      
       setTimeout(this.timer,1000)
     },
     painted(didYouWin) {
@@ -124,11 +136,12 @@ export default {
     },
     handleEmit(payload) {
       if (this.gameStore.letters.length != 5 && !["delete", "enter"].includes(payload)) {
-        this.gameStore.letters.push({ letter: payload, state: null });
+        this.gameStore.$patch({letters:[...this.gameStore.letters,{ letter: payload, state: null }]});
         return;
       }
       if (payload === "delete" && this.gameStore.letters.length) {
-        this.gameStore.letters = this.gameStore.letters.slice(0, -1);
+        //this.gameStore.letters = this.gameStore.letters.slice(0, -1);
+        this.gameStore.$patch({letters:[...this.gameStore.letters].slice(0,-1),func:'delete'})
         return;
       }
       if (payload === "enter") {
@@ -192,7 +205,7 @@ export default {
 #game {
   overflow: hidden;
   .gameBoxes {
-    width: 40vw;
+    width: 20vw;
     background-color: rgb(57, 126, 151);
     border-radius: 15px;
     margin: 10px auto;

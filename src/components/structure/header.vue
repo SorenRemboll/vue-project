@@ -1,9 +1,9 @@
 <template>
     <div id="header">
         <div class="iconList">
-            <i v-if="this.gameStore.difficulty" @click="this.gameStore.handleMenues('back')" class="fa-solid fa-door-open"></i>
+            <i v-if="this.gameStore.difficulty"  @click="this.gameStore.$patch({menuClicked:'back'})" class="fa-solid fa-door-open"></i>
             <i class="fa-solid fa-ghost"></i>
-            <i v-if="this.gameStore.difficulty"  @click="this.gameStore.handleMenues('reset')" class="fa-solid fa-arrow-rotate-left"></i>
+            <i v-if="this.gameStore.difficulty"  @click="this.gameStore.$patch({menuClicked:'reset'})" class="fa-solid fa-arrow-rotate-left"></i>
         </div>
     </div>
 </template>
@@ -43,7 +43,7 @@
         justify-content: center;
         flex-direction: column;
         gap: 10px;
-        padding: 30px 0;
+        padding: 10px 0;
         i{
             color: teal;
             font-size: 5em;

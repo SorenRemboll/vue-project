@@ -45,7 +45,6 @@
       },
       methods:{
         clickEvent(letter){
-          console.log(letter);
           this.$emit('letter',letter);
         },
         reset(){
@@ -56,7 +55,6 @@
             }
           });
           keyboardKeys.forEach(key => {
-            console.log(key);
             key.classList = 'key';
           });
         },
@@ -83,8 +81,8 @@
         },
       },
       mounted(){
-        this.gameStore.$subscribe((mutation,state)=>{
-          if(mutation.events.key == 'attempt'){
+        this.gameStore.$subscribe((mutation)=>{
+          if(mutation.payload?.attempt){
             this.colorKey();
           }
         })
